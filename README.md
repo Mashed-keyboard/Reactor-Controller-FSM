@@ -50,6 +50,7 @@ Then.. I had an idea\! What if we could store everything on one single memory co
 
 After some experimentation I figured out the “Set\_Output” of the regex could be used to select for **named capture groups**. The rest is history. The values on the single memory component are held as one long string of numerical values identified with 255**R1**, 255**G1**, 255**B1** .. 123**A5** .. matched using ?(\\d+)**ID** on the regex. Once combined with our new selector and name tags  **\<?1 to 5\>**.  The regex is essentially acting like an indexer.
 
+
 Notice that while we have found a way to index the string, how do we separate out the different categories of values? Regex only has one output and all of them would **share the same output** channel so contamination seems inevitable.
 
 I tried to devise a workaround by adding a “1 to 9” demultiplexor. It has an **inbuilt counter** that determines the current output and can be read, set, and incremented. By forwarding the selected output back to the regex selector and with a clock incrementing the DMX we can sort the output into **9 buckets**.
