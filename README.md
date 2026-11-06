@@ -77,10 +77,10 @@ Here is a physical demo featuring {1,2,3,**4**} with 3 values and one jump **4**
 <img width="800" height="160" alt="JumpDemo" src="https://github.com/user-attachments/assets/28e8aab8-3b9c-47ee-ae9d-437445b13d84" />
 
 
-Let’s try adding a third state → {5,6} → {7,8,9} With a jump **8** → 5\. Notice the problem?  
+Let’s try adding a third state → {5,6} → {7,8,**9**} With a jump **8** → 5\. Notice the problem?  
 The mistake I had made was not adding an extra jump to state B to avoid C causing the conditional states B and C to merge together. Running state B would also unconditionally run state C.
 
-Fixing those issues leaves us with the following states:
+Fixing this issue and moving the jumps to make space for C leaves us with the following states:
 ```
 Default state → {1,2} → {7,8,9} →
 (The jump 2 has been moved to 7)
