@@ -129,7 +129,7 @@ Conditional State B → {50,4} → {75,8,9} →
 Conditional State C  → {100,null} → {75,8,9} →
 ```
 (Wait. I forgot another constant. Baseline power for comparison. 2001W, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
-**After we add in the jumps “2 → 6 , 4 → 6 , 8 → 5 , 9 → 3”:**
+After we add in the jumps “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:
 ```
 Default state → {30,6} → {2001,75,5,3} →
 
