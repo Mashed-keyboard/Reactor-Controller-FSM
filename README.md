@@ -40,7 +40,7 @@ Reactor controllers calculate their outputs based on two formulas. One for Turbi
 
 This comes with a hidden drawback, the coefficient must stay safely under the bounds of 1.7x to avoid the risk of mismatching the turbine and fission rate, if the **turbine output** is ever calculated to be **higher than the max output** of the reactor, it will be **capped at 100**. But the **fission rate** formula which is derived from this won’t know any better, it will **continue climbing** relative to this mismatch potentially leading to fires or a meltdown swiftly followed by spontaneous combustion of the reactor.
 
-### Whats the next step? //Laying the groundwork
+### Past Optimisation Problems
 
 Before we move on. A bit of history, which later becomes integral to the design of my controller. My friend was working on their **light controller** with smooth transitions and streaming over voice chat. Each light in barotrauma accepts four inputs, RGB and A. 
 
@@ -81,20 +81,20 @@ Let’s try adding a third state → {5,6} → {7,**8**,**9**} With a jump **8**
 The mistake I had made was not adding an extra jump to state B to avoid C causing the conditional states B and C to merge together. Running state B would also unconditionally run state C.
 
 Fixing those issues leaves us with the following states:
-
-####Default state → {1,**2**} → {7,**8**,**9**} →  
+```
+Default state → {1,**2**} → {7,**8**,**9**} →  
 (The jump 2 has been moved to 7\)
 
-####Conditional State B → {3,**4**} → {7,**8**,**9**} →  
+Conditional State B → {3,**4**} → {7,**8**,**9**} →  
 (A jump 4 → 7 has been added)
 
-####Conditional State C  → {5,6} → {7,**8**,**9**} →  
+Conditional State C  → {5,6} → {7,**8**,**9**} →  
 (Jump 8 occurs before Jump 9\. Higher priority on state C)  
 (If both conditions are true state C is prioritised)
 
 Features the following jumps:  
 **2** → 7 , **4** → 7 , **8** → 5 , **9** → 3
-
+```
 
 ### Putting logic into practice
 
@@ -117,14 +117,15 @@ This is done by forwarding a preset turbine output, 100, to the fission rate for
 (I do want to mention that 75 as a constant, it’s been placed in bucket 7 where all states converge. Such that it is always available for fission calculations.)
 
 With the **values added** our states should now look something like this:  
+```
 Default state → {30,**2**} → {75,**8**,**9**} →
 
 Conditional State B → {50,**4**} → {75,**8**,**9**} →
 
 Conditional State C  → {100,null} → {75,**8**,**9**} →
-
+```
 (Wait. I forgot another constant. Baseline power for comparison. 2001, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
-
+```
 After we **add in the jumps** “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:  
 Default state → {30,**6**} → {2001,75,**5**,**3**} →
 
@@ -134,7 +135,7 @@ Conditional State C  → {100} → {2001,75,**5**,**3**} →
 
 With this added, all 9 buckets lined up will look like this:  
 #### {30,**6**,50,**6**,100,2001,75,**5**,**3**}
-
+```
 
 ### Connecting everything together  
 You might have realised by now, the “inspector” is actually the regex and demultiplexor pair. The buckets represent values in memory. Every time the clock increases the counter, the “inspector” matches the value with the corresponding number tag then sends it to the corresponding output 1-9.
@@ -143,11 +144,15 @@ Upon landing on a jump condition, the output is forwarded through a relay, then 
 
 Meanwhile each value in memory needs an identifier such that it can be matched by the regex. Here. I've labelled each value with a letter.  
 The string will in memory look something like this:  
-“30**a** 6**b** 50**c** 6**d** 100**e** 2001**f** 75**g** 5**h** 3**i**”
+```
+30a 6b 50c 6d 100e 2001f 75g 5h 3i
+```
 
 #### Optimising Regex Expressions  
 The original regex expression used in the light controller looked like this (?=.\*?(?\<1\>\\d+)**a**) for each value. It was then copy pasted as follows:  
-(?=.\*?(?\<1\>\\d+)**a**)(?=.\*?(?\<2\>\\d+)**b**) until we get to (?=.\*?(?\<9\>\\d+)**i**)  
+```
+(?=.*?(?<1>\d+)a)(?=.*?(?<2>\d+)b) until we get to (?=.*?(?<9>\d+)i)
+```
 The major advantage and drawback of this expression are the lookaheads. On one hand, it makes the expression extremely modular and flexible. Specific values can be matched regardless of order or spacing. 
 
 \-With the massive downside of being inefficient “O(n^2)”.    
@@ -158,7 +163,9 @@ Although those strengths were particularly useful when it came to dropping the e
 Luckily, the string we are working with has no need to be dynamic or modular. We can just **strictly match** the whole string itself by including the spaces **\\s** with each block like this (?\<1\>\\d+)**a**\\s
 
 So a more optimised expression “O(n)” would look something like this:   
-(?\<1\>\\d+)**a**\\s(?\<2\>\\d+)**b**\\s(?\<3\>\\d+)**c**\\s(?\<4\>\\d+)**d**\\s(?\<5\>\\d+)**e**\\s(?\<6\>\\d+)**f**\\s(?\<7\>\\d+)**g**\\s(?\<8\>\\d+)**h**\\s(?\<9\>\\d+)**i**
+```
+(?<1>\d+)a\s(?<2>\d+)b\s(?<3>\d+)c\s(?<4>\d+)d\s(?<5>\d+)e\s(?<6>\d+)f\s(?<7>\d+)g\s(?<8>\d+)h\s(?<9>\d+)i
+```
 
 (reminder to enable ‘use capture groups’ and leave ‘false output’ empty)
 
