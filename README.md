@@ -4,7 +4,9 @@ Wooooooo\! What a weird start to this project. I’ll have to disappoint but we 
 
 This project features a **programmable FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a **walkthrough of its development** and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
-**Feel free to skip pages:** past the intro: **page 3,** or to the FSM on **page 5**.
+<img width="1280" height="1192" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
+
+**Feel free to skip pages:** [past the intro:](#-Limitations-with-regular-controllers),** or [to the FSM logic](#-Onto-the-drawing-board) 
 
 Context. I felt motivated to outdo on my existing overclocker in barotrauma from 2024\. Fundamentally it felt incomplete as it relied on the in-built autoreactor to stabilise the fission rate during overclocking. 
 
@@ -58,9 +60,9 @@ So, the demultiplexor and clock were scrapped. It was replaced by four regex com
 
 Also I was lazy and didn’t want to handle strict string formatting, so in front of each capture group was a lookahead **(?=.\*)** Which is dubiously resource intensive , especially with four parallel regexes. But as long as the number of colours remains low it was a worthwhile tradeoff. 
 
-Onto the drawing board
+### Onto the drawing board
 
-So continuing on, since we can’t rely on normal reactor controllers we need to design our own custom controller while keeping it seaworthy; a nasty optimisation problem, bringing up that demultiplexor.
+So continuing on, since we can’t rely on normal reactor controllers we need to design our own custom controller while keeping it seaworthy; a nasty optimisation problem, bringing up that regex & demultiplexer pair.
 
 I had actually found myself playing with the idea that we could repurpose the DMX to update itself through “set output” which would enable the idea of a “jump” when indexes are placed in memory and forwarded back.
 
@@ -71,6 +73,8 @@ Default state → {1,**2**} → {5,6,7,8,**9**} →
 Conditional state → {3,4} → {5,6,7,8,**9**} → 
 
 Here is a physical demo featuring {1,2,3,**4**} with 3 values and one jump **4** → 2\. With 6 text displays showing all values at 1 Hz.
+<img width="800" height="160" alt="JumpDemo" src="https://github.com/user-attachments/assets/28e8aab8-3b9c-47ee-ae9d-437445b13d84" />
+
 
 Let’s try adding a third state → {5,6} → {7,**8**,**9**} With a jump **8** → 5\. Notice the problem?  
 The mistake I had made was not adding an extra jump to state B to avoid C causing the conditional states B and C to merge together. Running state B would also unconditionally run state C.
@@ -164,12 +168,14 @@ Feel free to configure the relays however you see fit. Personally I use a manual
 
 If you do intend to build this, do remember to change the power values “30**a**” and “50**c**” to ones which match your specific submarine. (and ensure all math components have a **non-zero timeframe** so no inputs are missed)
 
-This circuit box diagram is available for extra connection details as an extension to the original diagram. Do avoid using circuit boxes because they are incompatible due to external relays even when forwarding through the given outputs.
+<img width="1306" height="663" alt="image" src="https://github.com/user-attachments/assets/f998b864-b22a-41ad-bc89-c6a291588d24" />
+
+This circuit box diagram is for reference only: extra connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
 
 The second and third relays are placeholders for external relays.  
 The third relay on the right handles unconditional jumps and is an existing power down relay.  
 The second relay in the middle has several powerlines “shorted” to “power out” and is controlled by the switch. Both are external. It handles jumps on output 8\. 
 
-With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured to. Have fun.
+With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun.
 
    
