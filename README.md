@@ -48,8 +48,7 @@ They installed 5 preset colours. Given the limitation of one value per memory co
 
 Then.. I had an idea\! What if we could store everything on one single memory component? We may be limited to one value but it doesn’t limit how long it can be\! We could use a regex component to filter out the values but I had no idea how you would choose your values since on the surface regex is a **static expression** with no control/input besides data in.
 
-After some experimentation I figured out the “Set\_Output” of the regex could be used to select for **named capture groups**. The rest is history. The values on the single memory component are held as one long string of numerical values identified with 255**R1**, 255**G1**, 255**B1** .. 123**A5** .. matched using ?(\\d+)**ID** on the regex. Once combined with our new selector and name tags  **\<?1 to 5\>**.  The regex is essentially acting like an indexer.
-
+After some experimentation I figured out the “Set\_Output” of the regex could be used to select for **named capture groups**. The rest is history. The values on the single memory component are held as one long string of numerical values identified with ```255R1, 255G1, 255B1 .. 123A5``` .. matched using ?(\\d+)**ID** on the regex. Once combined with our new selector and name tags  **\<?1 to 5\>**.  The regex is essentially acting like an indexer.
 
 Notice that while we have found a way to index the string, how do we separate out the different categories of values? Regex only has one output and all of them would **share the same output** channel so contamination seems inevitable.
 
@@ -70,6 +69,7 @@ I had actually found myself playing with the idea that we could repurpose the DM
 Think of it like this, there is an **inspector checking 9 buckets** {1,2,3,4,5,6,7,8,9} one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A.Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9 to 3**, flushing {1,**2**} down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
 
 We can call these alternating paths “states” in our FSM:  
+
 Default state → {1,**2**} → {5,6,7,8,**9**} →  
 Conditional state → {3,4} → {5,6,7,8,**9**} → 
 
@@ -77,7 +77,7 @@ Here is a physical demo featuring {1,2,3,**4**} with 3 values and one jump **4**
 <img width="800" height="160" alt="JumpDemo" src="https://github.com/user-attachments/assets/28e8aab8-3b9c-47ee-ae9d-437445b13d84" />
 
 
-Let’s try adding a third state → {5,6} → {7,**8**,**9**} With a jump **8** → 5\. Notice the problem?  
+Let’s try adding a third state → {5,6} → {7,8,9} With a jump **8** → 5\. Notice the problem?  
 The mistake I had made was not adding an extra jump to state B to avoid C causing the conditional states B and C to merge together. Running state B would also unconditionally run state C.
 
 Fixing those issues leaves us with the following states:
@@ -105,13 +105,13 @@ $$
 Turbine_{Out} = \frac{Power\ Load_{Out}}{Max\ Power\ Output}
 $$
 
-(Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
+               (Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
 But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place 50 in bucket 3 of state B.
 
-Meanwhile Turbine Out can be **forwarded to the formula**:  
-#### Fission rate \= Turbine Output \* 75/Fuel\_Out
+                                 Meanwhile Turbine Out can be **forwarded to the formula**:  
+$$Fission\ Rate = Turbine_{Out} \cdot \frac{75}{Fuel_{Out}}$$
 
 On the other hand overclocking is done differently. You might remember the limitations connected to the formulas using “Load out”, hence requiring custom input.. 
 
@@ -127,7 +127,7 @@ Conditional State B → {50,4} → {75,8,9} →
 
 Conditional State C  → {100,null} → {75,8,9} →
 ```
-(Wait. I forgot another constant. Baseline power for comparison. 2001, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
+(Wait. I forgot another constant. Baseline power for comparison. 2001W, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
 **After we add in the jumps “2 → 6 , 4 → 6 , 8 → 5 , 9 → 3”:**
 ```
 Default state → {30,6} → {2001,75,5,3} →
