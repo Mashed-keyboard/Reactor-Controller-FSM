@@ -4,7 +4,7 @@ Wooooooo\! What a weird start to this project. I’ll have to disappoint but we 
 
 This project features a **programmable FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a **walkthrough of its development** and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
-<img width="1280" height="1192" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
+<img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
 **Feel free to skip pages:** [past the intro:](#-Limitations-with-regular-controllers),** or [to the FSM logic](#-Onto-the-drawing-board) 
 
