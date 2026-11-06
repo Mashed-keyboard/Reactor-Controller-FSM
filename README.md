@@ -82,18 +82,18 @@ The mistake I had made was not adding an extra jump to state B to avoid C causin
 
 Fixing those issues leaves us with the following states:
 ```
-Default state → {1,**2**} → {7,**8**,**9**} →  
-(The jump 2 has been moved to 7\)
+Default state → {1,2} → {7,8,9} →
+(The jump 2 has been moved to 7)
 
-Conditional State B → {3,**4**} → {7,**8**,**9**} →  
+Conditional State B → {3,4} → {7,8,9} →
 (A jump 4 → 7 has been added)
 
-Conditional State C  → {5,6} → {7,**8**,**9**} →  
-(Jump 8 occurs before Jump 9\. Higher priority on state C)  
+Conditional State C  → {5,6} → {7,8,9} →
+(Jump 8 occurs before Jump 9. Higher priority on state C)
 (If both conditions are true state C is prioritised)
 
-Features the following jumps:  
-**2** → 7 , **4** → 7 , **8** → 5 , **9** → 3
+Features the following jumps:
+2 → 7 , 4 → 7 , 8 → 5 , 9 → 3
 ```
 
 ### Putting logic into practice
@@ -101,7 +101,10 @@ Features the following jumps:
 So how is this even set up? Where do you even begin?  
 Let’s think about functionality starting with underclocking, let's look at the formulas.
 
-#### Turbine Out \= Power Load Out / Max Power output   
+$$ 
+Turbine_{Out} = \frac{Power\ Load_{Out}}{Max\ Power\ Output}
+$$
+
 (Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
@@ -118,23 +121,24 @@ This is done by forwarding a preset turbine output, 100, to the fission rate for
 
 With the **values added** our states should now look something like this:  
 ```
-Default state → {30,**2**} → {75,**8**,**9**} →
+Default state → {30,2} → {75,8,9} →
 
-Conditional State B → {50,**4**} → {75,**8**,**9**} →
+Conditional State B → {50,4} → {75,8,9} →
 
-Conditional State C  → {100,null} → {75,**8**,**9**} →
+Conditional State C  → {100,null} → {75,8,9} →
 ```
 (Wait. I forgot another constant. Baseline power for comparison. 2001, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
+**After we add in the jumps “2 → 6 , 4 → 6 , 8 → 5 , 9 → 3”:**
 ```
-After we **add in the jumps** “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:  
-Default state → {30,**6**} → {2001,75,**5**,**3**} →
+Default state → {30,6} → {2001,75,5,3} →
 
-Conditional State B → {50,**6**} → {2001,75,**5**,**3**} →
+Conditional State B → {50,6} → {2001,75,5,3} →
 
-Conditional State C  → {100} → {2001,75,**5**,**3**} →
-
+Conditional State C  → {100} → {2001,75,5,3} →
+```
 With this added, all 9 buckets lined up will look like this:  
-#### {30,**6**,50,**6**,100,2001,75,**5**,**3**}
+```
+{30,6,50,6,100,2001,75,5,3}
 ```
 
 ### Connecting everything together  
