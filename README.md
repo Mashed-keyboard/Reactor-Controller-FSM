@@ -145,7 +145,7 @@ Meanwhile each value in memory needs an identifier such that it can be matched b
 The string will in memory look something like this:  
 “30**a** 6**b** 50**c** 6**d** 100**e** 2001**f** 75**g** 5**h** 3**i**”
 
-### Optimising Regex Expressions  
+#### Optimising Regex Expressions  
 The original regex expression used in the light controller looked like this (?=.\*?(?\<1\>\\d+)**a**) for each value. It was then copy pasted as follows:  
 (?=.\*?(?\<1\>\\d+)**a**)(?=.\*?(?\<2\>\\d+)**b**) until we get to (?=.\*?(?\<9\>\\d+)**i**)  
 The major advantage and drawback of this expression are the lookaheads. On one hand, it makes the expression extremely modular and flexible. Specific values can be matched regardless of order or spacing. 
@@ -163,7 +163,7 @@ So a more optimised expression “O(n)” would look something like this:
 (reminder to enable ‘use capture groups’ and leave ‘false output’ empty)
 
 
-### Physical Wiring  
+#### Physical Wiring  
 With all the theory and design **wrapped up**, it’s time to actually wire this up.   
 Feel free to configure the relays however you see fit. Personally I use a manual switch for overclocking. Underclocking is set automatically by targeting a baseline power load on a “greater than” component so the reactor “goes to sleep” when no subsystems are drawing power.
 
