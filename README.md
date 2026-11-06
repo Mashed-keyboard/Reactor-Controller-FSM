@@ -82,13 +82,13 @@ The mistake I had made was not adding an extra jump to state B to avoid C causin
 
 Fixing those issues leaves us with the following states:
 
-Default state → {1,**2**} → {7,**8**,**9**} →  
+####Default state → {1,**2**} → {7,**8**,**9**} →  
 (The jump 2 has been moved to 7\)
 
-Conditional State B → {3,**4**} → {7,**8**,**9**} →  
+####Conditional State B → {3,**4**} → {7,**8**,**9**} →  
 (A jump 4 → 7 has been added)
 
-Conditional State C  → {5,6} → {7,**8**,**9**} →  
+####Conditional State C  → {5,6} → {7,**8**,**9**} →  
 (Jump 8 occurs before Jump 9\. Higher priority on state C)  
 (If both conditions are true state C is prioritised)
 
@@ -101,14 +101,14 @@ Features the following jumps:
 So how is this even set up? Where do you even begin?  
 Let’s think about functionality starting with underclocking, let's look at the formulas.
 
-Turbine Out \= Power Load Out / Max Power output   
+#### Turbine Out \= Power Load Out / Max Power output   
 (Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
 But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place 50 in bucket 3 of state B.
 
 Meanwhile Turbine Out can be **forwarded to the formula**:  
-Fission rate \= Turbine Output \* 75/Fuel\_Out
+#### Fission rate \= Turbine Output \* 75/Fuel\_Out
 
 On the other hand overclocking is done differently. You might remember the limitations connected to the formulas using “Load out”, hence requiring custom input.. 
 
@@ -133,7 +133,7 @@ Conditional State B → {50,**6**} → {2001,75,**5**,**3**} →
 Conditional State C  → {100} → {2001,75,**5**,**3**} →
 
 With this added, all 9 buckets lined up will look like this:  
-{30,**6**,50,**6**,100,2001,75,**5**,**3**}
+#### {30,**6**,50,**6**,100,2001,75,**5**,**3**}
 
 
 ### Connecting everything together  
@@ -145,7 +145,7 @@ Meanwhile each value in memory needs an identifier such that it can be matched b
 The string will in memory look something like this:  
 “30**a** 6**b** 50**c** 6**d** 100**e** 2001**f** 75**g** 5**h** 3**i**”
 
-Optimising Regex Expressions  
+### Optimising Regex Expressions  
 The original regex expression used in the light controller looked like this (?=.\*?(?\<1\>\\d+)**a**) for each value. It was then copy pasted as follows:  
 (?=.\*?(?\<1\>\\d+)**a**)(?=.\*?(?\<2\>\\d+)**b**) until we get to (?=.\*?(?\<9\>\\d+)**i**)  
 The major advantage and drawback of this expression are the lookaheads. On one hand, it makes the expression extremely modular and flexible. Specific values can be matched regardless of order or spacing. 
