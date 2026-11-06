@@ -1,6 +1,7 @@
 [Reactor-Controller-FSM.md](https://github.com/user-attachments/files/34496340/Copy.of.Exploiting.Barotrauma.s.Electrical.System.By.Building.a.Custom.FSM.md)
 # Exploiting Barotrauma's Electrical System By Building a Custom FSM
-Wooooooo\! What a weird start to this project. I’ll have to disappoint but we break that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
+Wooooooo\! What a weird start to this project. 
+I’ll have to disappoint but I'm breaking that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
 
 This project features a **programmable FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a **walkthrough of its development** and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
@@ -182,7 +183,7 @@ If you do intend to build this, do remember to change the power values “30**a*
 
 <img width="1306" height="663" alt="image" src="https://github.com/user-attachments/assets/f998b864-b22a-41ad-bc89-c6a291588d24" />
 
-This circuit box diagram is for reference only: extra connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
+This circuit box diagram is for reference only: showcases connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
 
 The second and third relays are placeholders for external relays.  
 The third relay on the right handles unconditional jumps and is an existing power down relay.  
