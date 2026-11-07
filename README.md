@@ -110,8 +110,9 @@ $$
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
 But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place our calculated value, 50, in bucket 3 of state B. Meanwhile Turbine Out can be **forwarded** to the formula below:  
+
 $$
-Fission\ Rate = Turbine_{Out} \cdot \frac{75}{Fuel_{Out}}
+Fission_{Rate} = Turbine_{Out} \times \frac{75}{Fuel_{Out}}
 $$
 
 On the other hand overclocking is done differently. You might remember the limitations connected to the formulas using “Load out”, hence requiring custom input.. 
