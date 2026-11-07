@@ -16,7 +16,7 @@ I’ll first go over this old system, it abuses several mechanics in the barotra
 
 ### Wiring mechanics and power distribution
 
-Normally the reactor is limited to a single **power output**. There is a way around it, I dub it **“wire shorting”**. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from \*some\* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine **designers have pulled hair** unknowingly looking for these “shorts” mysteriously powering the sub.  
+Normally the reactor is limited to a single **power output**. There is a way around it, I dub it *“wire shorting”*. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from \*some\* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine *designers have pulled hair* unknowingly looking for these “shorts” mysteriously powering the sub.  
 
 
 ### The old system  
@@ -24,9 +24,10 @@ Normally the reactor is limited to a single **power output**. There is a way aro
 The original overclocker uses a switch into a signal check outputting 100 to the reactor’s turbine output with the **autoreactor enabled**, allowing for **overvoltage** equal to the **maximum power output** of a given reactor once the fission rate stabilised.   
 Which normally is unusable as such insane overvoltage would instantaneously fry every junction across the submarine. Which brings us to the second exploit.. the.. \***docking hatch**\* 
 
-It’s unique in the fact that it is an indestructible **power distributor** which is immune to **electrical damage** since it’s essentially a door. But like every component in the game, it has a limited wire output of 5\. You totally could wire the reactor straight to the docking hatch but now you’d only have 4 outputs while overvolting.. n-nothing? My design incorporates a short on the engine, bridging the reactor to the docking hatch, which **saves** us **one output** slot. 
+It’s unique in the fact that it is an indestructible power distributor which is *immune* to electrical damage since it’s essentially a door. But like every component in the game, it has a limited wire output of 5\. You totally could wire the reactor straight to the docking hatch but now you’d only have 4 outputs while overvolting.. *n-nothing?* My design incorporates a short on the engine, bridging the reactor to the docking hatch, which *saves* us one *output slot*. 
 
-The remainder of the design incorporates **three relays** rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a **“short” here** creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors e.t.c. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering  \-the step down relays become unstable under overvoltage causing power drops 33\~55% of their rated outputs.
+The remainder of the design incorporates *three relays* rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a “**short**” here creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors e.t.c. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering.  
+(step down relays become unstable under overvoltage causing power drops 33\~55% of their rated outputs)
 
 If you had the luxury of battery power you could shut off the relays completely, freeing up more power to overvolt other components while depleting battery power for everything else. Although at the time of writing **overvoltage benefits** have been **capped to 200%** so there is little to be gained by doing this unless your submarine has an awful reactor. 
 
@@ -37,9 +38,9 @@ The downsides of this design stems from the **autoreactor**, when adding more th
 
 Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate using turbine output and an existing constant. 
 
-**You see the problem right?** The formulas are based on “load\_out” which means they are strictly tied to the exact power demands of the submarine. There is a workaround which existing designs use, you multiply load\_out by some overvoltage coefficient 1.0x to 2.0x. 
+*You see the problem right?* The formulas are based on “load\_out” which means they are strictly tied to the exact power demands of the submarine. There is a workaround which existing designs use, you multiply load\_out by some overvoltage coefficient 1.0x to 2.0x. 
 
-This comes with a hidden drawback, the coefficient must stay safely under the bounds of 1.7x to avoid the risk of mismatching the turbine and fission rate, if the **turbine output** is ever calculated to be **higher than the max output** of the reactor, it will be **capped at 100**. But the **fission rate** formula which is derived from this won’t know any better, it will **continue climbing** relative to this mismatch potentially leading to fires or a meltdown swiftly followed by spontaneous combustion of the reactor.
+This comes with a hidden drawback, the coefficient must stay safely under the bounds of 1.7x to avoid the risk of mismatching the turbine and fission rate, if the **turbine output** is ever calculated to be *higher than the max output* of the reactor, it will be **capped at 100**. But the **fission rate** formula which is derived from this *won’t know any better*, it will **continue climbing** relative to this mismatch potentially leading to fires or a meltdown swiftly followed by *spontaneous combustion of the reactor*.
 
 ### Past Optimisation Problems
 
