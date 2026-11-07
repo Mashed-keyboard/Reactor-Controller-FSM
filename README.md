@@ -33,9 +33,9 @@ If you had the luxury of battery power you could shut off the relays completely,
 The downsides of this design stems from the **autoreactor**, when adding more than two fuel rods, the reactor must first be **manually calibrated** otherwise calibrations will take too long and the reactor is likely to explode before it can stabilise. Plus the minor downside of the engine now being liable for connecting the reactor and the rest of the ship. ( If the engine fully breaks at 0% durability power is no longer transferred through it ).
 
 
-### Limitations with regular controllers
+### Overclocking limitations with regular controllers
 
-Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate based on turbine output and an existing constant. 
+Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate using turbine output and an existing constant. 
 
 **You see the problem right?** The formulas are based on “load\_out” which means they are strictly tied to the exact power demands of the submarine. There is a workaround which existing designs use, you multiply load\_out by some overvoltage coefficient 1.0x to 2.0x. 
 
@@ -57,17 +57,17 @@ I tried to devise a workaround by adding a “1 to 9” demultiplexor. It has an
 
 I would later recognise this pair to be the fundamental core of my reactor controller, but for the **current application** it was impractical to differentiate each colour set when all outputs of the DMX were active. Not to mention with only 9 values means we can only have 2 colour sets, far from the original 5\. 
 
-So, the demultiplexor and clock were scrapped. It was replaced by four regex components configured to only search for their respective sets for Rx,Gx,Bx,Ax. By selecting 1-5 on the regexes we get a set of 4 outputs, a set for each colour. That compresses 24 components into 5, one memory \+ four regexes.
+So, the demultiplexor and clock were scrapped. It was replaced by four regex components configured to only search for their respective sets ```Rx Gx Bx Ax```. By selecting 1-5 on the regexes we get a set of 4 outputs, a set for each colour. That compresses 24 components into 5, one memory \+ four regexes.
 
 Also I was lazy and didn’t want to handle strict string formatting, so in front of each capture group was a lookahead **(?=.\*)** Which is dubiously resource intensive , especially with four parallel regexes. But as long as the number of colours remains low it was a worthwhile tradeoff. 
 
 ### Onto the drawing board
 
-So continuing on, since we can’t rely on normal reactor controllers we need to design our own custom controller while keeping it seaworthy; a nasty optimisation problem, bringing up that regex & demultiplexer pair.
+So continuing on, since we can’t rely on normal reactor controllers we need to design our own custom controller while keeping it seaworthy; a nasty optimisation problem, bringing up that regex & demultiplexor pair.
 
 I had actually found myself playing with the idea that we could repurpose the DMX to update itself through “set output” which would enable the idea of a “jump” when indexes are placed in memory and forwarded back.
 
-Think of it like this, there is an **inspector checking 9 buckets** {1,2,3,4,5,6,7,8,9} one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A. Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9 to 3**, skipping over {1,**2**} flushing it down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
+Think of it like this, there is an **inspector checking 9 buckets** ```{1,2,3,4,5,6,7,8,9}``` one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A. Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9** to 3, skipping over {1,**2**} flushing it down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
 
 We can call these alternating paths “states” in our FSM:  
 
@@ -186,7 +186,7 @@ This circuit box diagram is for reference only; contains additional connection d
 
 (The second and third relays shown on the right are placeholders for external relays)  
 The third relay is an existing power down relay and handles unconditional jumps. (This relay is always connected - does not change state)
-The second relay is an existing “shorted” relay on “power out” and is controlled by a switch. Both are external. It handles jumps on output 8\. ("Shorts" bypass the relay entirely and as such the state of the relay does not affect power.)
+The second relay is an existing “shorted” relay on “power out” and is controlled directly by an external switch. It handles jumps on output 8\. ("Shorts" bypass the relay entirely and as such the state of the relay does not affect power.)
 
 With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun. If you have any further questions do feel free to reach out.
 
