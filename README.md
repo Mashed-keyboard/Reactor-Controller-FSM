@@ -181,9 +181,9 @@ If you do intend to build this, do remember to change the power values “30**a*
 This circuit box diagram is for reference only; contains additional connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
 (Also while you technically could use an existing junction box to forward signals back to save components, failure of the junction box could jeopardise the reactor controller so I wouldn't.)
 
-The second and third relay's on the right are placeholders for external relay's.  
-The third relay is an existing power down relay and handles unconditional jumps.  
-The second relay in the middle has several powerlines “shorted” to “power out” and is controlled by a switch. Both are external. It handles jumps on output 8\. 
+(The second and third relays shown on the right are placeholders for external relays)  
+The third relay is an existing power down relay and handles unconditional jumps. (This relay is always connected - does not change state)
+The second relay is an existing “shorted” relay on “power out” and is controlled by a switch. Both are external. It handles jumps on output 8\. ("Shorts" bypass the relay entirely and as such the state of the relay does not affect power.)
 
 With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun. If you have any further questions do feel free to reach out.
 
