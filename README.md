@@ -67,7 +67,7 @@ So continuing on, since we can’t rely on normal reactor controllers we need to
 
 I had actually found myself playing with the idea that we could repurpose the DMX to update itself through “set output” which would enable the idea of a “jump” when indexes are placed in memory and forwarded back.
 
-Think of it like this, there is an **inspector checking 9 buckets** {1,2,3,4,5,6,7,8,9} one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A.Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9 to 3**, flushing {1,**2**} down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
+Think of it like this, there is an **inspector checking 9 buckets** {1,2,3,4,5,6,7,8,9} one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A. Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9 to 3**, skipping over {1,**2**} flushing it down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
 
 We can call these alternating paths “states” in our FSM:  
 
