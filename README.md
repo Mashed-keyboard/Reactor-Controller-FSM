@@ -103,14 +103,16 @@ So how is this even set up? Where do you even begin?
 Let’s think about functionality starting with underclocking, let's look at the formulas.
 
 $$ 
-Turbine_{Out} = \frac{Power\ Load_{Out}}{Max\ Power\ Output}
+Turbine_{Out} = \frac{Power\ Load_{Out}}{Max\ Power_{Out}}
 $$
 
                (Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
 But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place our calculated value, 50, in bucket 3 of state B. Meanwhile Turbine Out can be **forwarded** to the formula below:  
-$$Fission\ Rate = Turbine_{Out} \cdot \frac{75}{Fuel_{Out}}$$
+$$
+Fission\ Rate = Turbine_{Out} \cdot \frac{75}{Fuel_{Out}}
+$$
 
 On the other hand overclocking is done differently. You might remember the limitations connected to the formulas using “Load out”, hence requiring custom input.. 
 
