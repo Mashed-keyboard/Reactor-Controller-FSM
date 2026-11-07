@@ -1,13 +1,13 @@
 [Reactor-Controller-FSM.md](https://github.com/user-attachments/files/34496340/Copy.of.Exploiting.Barotrauma.s.Electrical.System.By.Building.a.Custom.FSM.md)
 # Exploiting Barotrauma's Electrical System By Building a Custom FSM
 Wooooooo\! What a weird start to this project. 
-I’ll have to disappoint but I'm breaking that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
+I’ll have to disappoint but this breaks that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
 
 This project features a **programmable FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a **walkthrough of its development** and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
-**Feel free to skip pages:** [past the intro:](#-Limitations-with-regular-controllers),** or [to the FSM logic](#-Onto-the-drawing-board) 
+**Feel free to skip pages:** [past the intro:](#Limitations-with-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
 
 Context. I felt motivated to outdo on my existing overclocker in barotrauma from 2024\. Fundamentally it felt incomplete as it relied on the in-built autoreactor to stabilise the fission rate during overclocking. 
 
@@ -109,9 +109,7 @@ $$
                (Do note that Max Power is set 100x smaller such that Turbine Out is 0-100 and not 0-1.0)
 
 If we want to underclock. We increase the constant “Max Power Output” by some factor, in this case, 5/3. Such that the turbine output is 40% lower.   
-But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place our calculated value, 50, in bucket 3 of state B.
-
-                                 Meanwhile Turbine Out can be **forwarded to the formula**:  
+But first, assuming our **default max power** is 3 kw, we set bucket1 of the default state as 30\. Then we can place our calculated value, 50, in bucket 3 of state B. Meanwhile Turbine Out can be **forwarded** to the formula below:  
 $$Fission\ Rate = Turbine_{Out} \cdot \frac{75}{Fuel_{Out}}$$
 
 On the other hand overclocking is done differently. You might remember the limitations connected to the formulas using “Load out”, hence requiring custom input.. 
@@ -128,7 +126,7 @@ Conditional State B → {50,4} → {75,8,9} →
 
 Conditional State C  → {100,null} → {75,8,9} →
 ```
-(Wait. I forgot another constant. Baseline power for comparison. 2001W, I'll place it in **bucket 6** which is unused and move the jumps accordingly)
+(Since **bucket 6** is unused, another constant 2001W is placed here. The jumps are shifted accordingly)
 After we add in the jumps “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:
 ```
 Default state → {30,6} → {2001,75,5,3} →
@@ -137,7 +135,7 @@ Conditional State B → {50,6} → {2001,75,5,3} →
 
 Conditional State C  → {100} → {2001,75,5,3} →
 ```
-With this added, all 9 buckets lined up will look like this:  
+With values and jumps added, all 9 buckets lined up will look like this:  
 ```
 {30,6,50,6,100,2001,75,5,3}
 ```
@@ -161,34 +159,32 @@ The original regex expression used in the light controller looked like this (?=.
 The major advantage and drawback of this expression are the lookaheads. On one hand, it makes the expression extremely modular and flexible. Specific values can be matched regardless of order or spacing. 
 
 \-With the massive downside of being inefficient “O(n^2)”.    
-So I've gotta say “**That's alotta of lookaheads..**” 
+So I've gotta say “*That's alotta of lookaheads..*” 
 
 Although those strengths were particularly useful when it came to dropping the entire catalog of RGBA light values into that light controller; Varying light parameters didn’t need to be strictly ordered and can easily be added to the search pattern.
 
 Luckily, the string we are working with has no need to be dynamic or modular. We can just **strictly match** the whole string itself by including the spaces **\\s** with each block like this (?\<1\>\\d+)**a**\\s
 
-So a more optimised expression “O(n)” would look something like this:   
+So an optimised expression “O(n)” would look something like this:   
 ```
 (?<1>\d+)a\s(?<2>\d+)b\s(?<3>\d+)c\s(?<4>\d+)d\s(?<5>\d+)e\s(?<6>\d+)f\s(?<7>\d+)g\s(?<8>\d+)h\s(?<9>\d+)i
 ```
-
-(reminder to enable ‘use capture groups’ and leave ‘false output’ empty)
-
 
 #### Physical Wiring  
 With all the theory and design **wrapped up**, it’s time to actually wire this up.   
 Feel free to configure the relays however you see fit. Personally I use a manual switch for overclocking. Underclocking is set automatically by targeting a baseline power load on a “greater than” component so the reactor “goes to sleep” when no subsystems are drawing power.
 
-If you do intend to build this, do remember to change the power values “30**a**” and “50**c**” to ones which match your specific submarine. (and ensure all math components have a **non-zero timeframe** so no inputs are missed)
+If you do intend to build this, do remember to change the power values “30**a**” and “50**c**” to ones which match your specific submarine. (reminder to ensure all math components have a **non-zero timeframe** and for regex components don't forget to enable ‘use capture groups’ and leave ‘false output’ empty) 
 
 <img width="1306" height="663" alt="image" src="https://github.com/user-attachments/assets/f998b864-b22a-41ad-bc89-c6a291588d24" />
 
-This circuit box diagram is for reference only: showcases connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
+This circuit box diagram is for reference only; contains additional connection details as an extension to the original diagram. Try to **avoid using circuit** boxes because they are **incompatible** due to external relays even when forwarding through the given outputs.
+(Also while you technically could use an existing junction box to forward signals back to save components, failure of the junction box could jeopardise the reactor controller so I wouldn't.)
 
-The second and third relays are placeholders for external relays.  
-The third relay on the right handles unconditional jumps and is an existing power down relay.  
-The second relay in the middle has several powerlines “shorted” to “power out” and is controlled by the switch. Both are external. It handles jumps on output 8\. 
+The second and third relay's on the right are placeholders for external relay's.  
+The third relay is an existing power down relay and handles unconditional jumps.  
+The second relay in the middle has several powerlines “shorted” to “power out” and is controlled by a switch. Both are external. It handles jumps on output 8\. 
 
-With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun.
+With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun. If you have any further questions do feel free to reach out.
 
    
