@@ -16,7 +16,7 @@ I’ll first go over this old system, it abuses several mechanics in the barotra
 
 ### Wiring mechanics and power distribution
 
-Normally the reactor is limited to a single **power output**. There is a way around it, I dub it *“wire shorting”*. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from \*some\* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine *designers have pulled hair* unknowingly looking for these “shorts” mysteriously powering the sub.  
+Normally the reactor is limited to a single **power output**. There is a way around it, I dub it *“wire shorting”*. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from \*some\* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine designers *have pulled hair* unknowingly looking for these “*shorts*” mysteriously powering the sub.  
 
 
 ### The old system  
@@ -36,7 +36,7 @@ The downsides of this design stems from the **autoreactor**, when adding more th
 
 ### Overclocking limitations with regular controllers
 
-Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate using turbine output and an existing constant. 
+Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate based on turbine output and an existing constant. 
 
 *You see the problem right?* The formulas are based on “load\_out” which means they are strictly tied to the exact power demands of the submarine. There is a workaround which existing designs use, you multiply load\_out by some overvoltage coefficient 1.0x to 2.0x. 
 
@@ -189,6 +189,6 @@ This circuit box diagram is for reference only; contains additional connection d
 The third relay is an existing power down relay and handles unconditional jumps. (This relay is always connected - does not change state)
 The second relay is an existing “shorted” relay on “power out” and is controlled directly by an external switch. It handles jumps on output 8\. ("Shorts" bypass the relay entirely and as such the state of the relay does not affect power.)
 
-With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. Oh- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun. If you have any further questions do feel free to reach out.
+With that finished, I imagine that concludes our time together. Thanks for reading, I really enjoyed it. *Oh*- And before you go. If you wanted to test it I’ve put up a [demo](https://steamcommunity.com/sharedfiles/filedetails/?source=Facepunch.Steamworks&id=3834851710) on the vanilla submarine “the Dugong”, that’s what the current values are configured for. Have fun. If you have any further questions do feel free to reach out.
 
    
