@@ -7,7 +7,7 @@ This project features a **programed FSM** (Finite State Machine) implemented usi
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
-**Feel free to skip pages:** [past the intro:](#Limitations-with-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
+**Feel free to skip ahead:** [past the intro:](#Limitations-with-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
 
 Context. I felt motivated to outdo on my existing overclocker in barotrauma from 2024\. Fundamentally it felt incomplete as it relied on the in-built autoreactor to stabilise the fission rate during overclocking. 
 
