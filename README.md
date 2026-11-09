@@ -3,7 +3,7 @@
 Wooooooo\! What a weird start to this project. 
 I’ll have to disappoint but this breaks that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
 
-This project features a **programed FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a *walkthrough of its development* and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
+This project features a **programmed FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a *walkthrough of its development* and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
