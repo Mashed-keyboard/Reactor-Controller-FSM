@@ -3,7 +3,7 @@
 Wooooooo\! What a weird start to this project. 
 I’ll have to disappoint but this breaks that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
 
-This project features a **programmable FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a **walkthrough of its development** and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
+This project features a **programed FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a *walkthrough of its development* and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
@@ -46,17 +46,17 @@ This comes with a hidden drawback, the coefficient must stay safely under the bo
 
 Before we move on. A bit of history, which later becomes integral to the design of my controller. My friend was working on their **light controller** with smooth transitions and streaming over voice chat. Each light in barotrauma accepts four inputs, RGB and A. 
 
-They installed 5 preset colours. Given the limitation of one value per memory component, that’s **20 entire memory components** centralised around **four multiplexors** for routing each set. Limiting this design to the sandbox. (A legacy version of their project prior to the introduction of multiplexors and demultiplexors can be found here [light smoother 2.0](https://steamcommunity.com/sharedfiles/filedetails/?id=3211183061))
+They installed 5 preset colours. Given the limitation of one value per memory component, that’s *20 entire* memory components centralised around *four* multiplexors for routing each set. Limiting this design to the sandbox. (A legacy version of their project prior to the introduction of multiplexors and demultiplexors can be found here [light smoother 2.0](https://steamcommunity.com/sharedfiles/filedetails/?id=3211183061))
 
-Then.. I had an idea\! What if we could store everything on one single memory component? We may be limited to one value but it doesn’t limit how long it can be\! We could use a regex component to filter out the values but I had no idea how you would choose your values since on the surface regex is a **static expression** with no control/input besides data in.
+Then.. I had an *idea\!* What if we could store everything on one single memory component? We may be limited to one value but it doesn’t limit how long it can be\! We could use a regex component to filter out the values but I had no idea how you would choose your values since on the surface regex is a *static expression* with no control/input besides data in.
 
 After some experimentation I figured out the “Set\_Output” of the regex could be used to select for **named capture groups**. The rest is history. The values on the single memory component are held as one long string of numerical values identified with ```255R1, 255G1, 255B1 .. 123A5``` .. matched using ?(\\d+)**ID** on the regex. Once combined with our new selector and name tags  **\<?1 to 5\>**.  The regex is essentially acting like an indexer.
 
-Notice that while we have found a way to index the string, how do we separate out the different categories of values? Regex only has one output and all of them would **share the same output** channel so contamination seems inevitable.
+Notice that while we have found a way to index the string, how do we separate out the different categories of values? Regex only has one output and all of them would *share the same output* channel so contamination seems inevitable.
 
 I tried to devise a workaround by adding a “1 to 9” demultiplexor. It has an **inbuilt counter** that determines the current output and can be read, set, and incremented. By forwarding the selected output back to the regex selector and with a clock incrementing the DMX we can sort the output into **9 buckets**.
 
-I would later recognise this pair to be the fundamental core of my reactor controller, but for the **current application** it was impractical to differentiate each colour set when all outputs of the DMX were active. Not to mention with only 9 values means we can only have 2 colour sets, far from the original 5\. 
+I would later recognise this pair to be the fundamental core of my reactor controller, but for the *current application* it was impractical to differentiate each colour set when all outputs of the DMX were active. Not to mention with only 9 values means we can only have 2 colour sets, far from the original 5\. 
 
 So, the demultiplexor and clock were scrapped. It was replaced by four regex components configured to only search for their respective sets ```Rx Gx Bx Ax```. By selecting 1-5 on the regexes we get a set of 4 outputs, a set for each colour. That compresses 24 components into 5, one memory \+ four regexes.
 
@@ -68,7 +68,7 @@ So continuing on, since we can’t rely on normal reactor controllers we need to
 
 I had actually found myself playing with the idea that we could repurpose the DMX to update itself through “set output” which would enable the idea of a “jump” when indexes are placed in memory and forwarded back.
 
-Think of it like this, there is an **inspector checking 9 buckets** ```{1,2,3,4,5,6,7,8,9}``` one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A. Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9** to 3, skipping over {1,**2**} flushing it down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
+*Think of it like this*, there is an **inspector checking 9 buckets** ```{1,2,3,4,5,6,7,8,9}``` one by one on a loop. We can skip over {3,4} given **2** has a note that says skip **to bucket 5**, let's call this jump A. Then if we add another jump B, conditional since we don’t want an infinite loop. We can go from **9** to 3, skipping over {1,**2**} flushing it down the toilet with its respective jump (You\! AND your jump\!) until the condition is no longer fulfilled, in which case it loops back. 
 
 We can call these alternating paths “states” in our FSM:  
 
@@ -145,7 +145,7 @@ With values and jumps added, all 9 buckets lined up will look like this:
 ```
 
 ### Connecting everything together  
-You might have realised by now, the “inspector” is actually the regex and demultiplexor pair. The buckets represent values in memory. Every time the clock increases the counter, the “inspector” matches the value with the corresponding number tag then sends it to the corresponding output 1-9.
+You might have realised by now, the “*inspector*” is actually the regex and demultiplexor pair. The buckets represent values in memory. Every time the clock increases the counter, the “inspector” matches the value with the corresponding number tag then sends it to the corresponding output 1-9.
 
 Upon landing on a jump condition, the output is forwarded through a relay, then back. Updating the counter and moving the “inspector” along. The relays physically enable or disable jumps and are configured by signals from sensors.
 
@@ -175,7 +175,7 @@ So an optimised expression “O(n)” would look something like this:
 ```
 
 #### Physical Wiring  
-With all the theory and design **wrapped up**, it’s time to actually wire this up.   
+With all the theory and design *wrapped up*, it’s time to actually wire this up.   
 Feel free to configure the relays however you see fit. Personally I use a manual switch for overclocking. Underclocking is set automatically by targeting a baseline power load on a “greater than” component so the reactor “goes to sleep” when no subsystems are drawing power.
 
 If you do intend to build this, do remember to change the power values “30**a**” and “50**c**” to ones which match your specific submarine. (reminder to ensure all math components have a **non-zero timeframe** and for regex components don't forget to enable ‘use capture groups’ and leave ‘false output’ empty) 
