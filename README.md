@@ -7,7 +7,7 @@ This project features a **programmed FSM** (Finite State Machine) implemented us
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
-**Feel free to skip ahead:** [past the intro:](#Limitations-with-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
+**Feel free to skip ahead:** [past the intro:](#Overclocking-limitations-on-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
 
 Context. I felt motivated to outdo on my existing overclocker in barotrauma from 2024\. Fundamentally it felt incomplete as it relied on the in-built autoreactor to stabilise the fission rate during overclocking. 
 
@@ -16,7 +16,7 @@ I’ll first go over this old system, it abuses several mechanics in the barotra
 
 ### Wiring mechanics and power distribution
 
-Normally the reactor is limited to a single **power output**. There is a way around it, I dub it *“wire shorting”*. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from \*some\* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine designers *have pulled hair* unknowingly looking for these “*shorts*” mysteriously powering the sub.  
+Normally the reactor is limited to a single **power output**. There is a way around it, I dub it *“wire shorting”*. When two wires are connected to the same powered component such as the engine, a lamp, or the navigation terminal. They share power between each other indirectly through said “short” ; the wires need only stem from *some* distributor e.g a junction box, ship batteries or as you’ll see, **relay power out** slots. I’m sure plenty of stealth submarine designers *have pulled hair* unknowingly looking for these “*shorts*” mysteriously powering the sub.  
 
 
 ### The old system  
@@ -26,7 +26,7 @@ Which normally is unusable as such insane overvoltage would instantaneously fry 
 
 It’s unique in the fact that it is an indestructible power distributor which is *immune* to electrical damage since it’s essentially a door. But like every component in the game, it has a limited wire output of 5\. You totally could wire the reactor straight to the docking hatch but now you’d only have 4 outputs while overvolting.. *n-nothing?* My design incorporates a short on the engine, bridging the reactor to the docking hatch, which *saves* us one *output slot*. 
 
-The remainder of the design incorporates *three relays* rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a “**short**” here creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors e.t.c. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering.  
+The remainder of the design incorporates *three relays* rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a “**short**” here creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors etc. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering.  
 (step down relays become unstable under overvoltage causing power drops 33\~55% of their rated outputs)
 
 If you had the luxury of battery power you could shut off the relays completely, freeing up more power to overvolt other components while depleting battery power for everything else. Although at the time of writing **overvoltage benefits** have been **capped to 200%** so there is little to be gained by doing this unless your submarine has an awful reactor. 
@@ -34,7 +34,7 @@ If you had the luxury of battery power you could shut off the relays completely,
 The downsides of this design stems from the **autoreactor**, when adding more than two fuel rods, the reactor must first be **manually calibrated** otherwise calibrations will take too long and the reactor is likely to explode before it can stabilise. Plus the minor downside of the engine now being liable for connecting the reactor and the rest of the ship. ( If the engine fully breaks at 0% durability power is no longer transferred through it ).
 
 
-### Overclocking limitations with regular controllers
+### Overclocking limitations on regular controllers
 
 Reactor controllers calculate their outputs based on two formulas. One for Turbine output based on load\_out and max power out. The other for Fission rate based on turbine output and an existing constant. 
 
