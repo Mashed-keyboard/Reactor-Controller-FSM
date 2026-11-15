@@ -3,11 +3,11 @@
 Wooooooo\! What a weird start to this project. 
 I’ll have to disappoint but this breaks that cliche of “Man builds poorly optimised CPU out of 5000 small LEGOS”
 
-This project features a **programmed FSM** (Finite State Machine) implemented using 6 components representing up to 3 states. This is a *walkthrough of its development* and overall application as an advanced **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
+This project features a 3 state **programmed FSM** (Finite State Machine) consisting of a program counter, demux and improvised decoder. This is a *walkthrough of its development* and overall contribution in my **reactor controller** for overclocking, underclocking and normal operation made up of 13 components as shown in the finalised diagram below.
 
 <img width="1024" height="950" alt="circuitsimage" src="https://github.com/user-attachments/assets/869e3e58-1e92-4133-9009-dde641a6b820" />
 
-**Feel free to skip ahead:** [past the intro:](#Overclocking-limitations-on-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
+**Feel free to skip ahead:** [past the intro/exploits:](#Overclocking-limitations-on-regular-controllers),** or [to the FSM logic](#Onto-the-drawing-board) 
 
 Context. I felt motivated to outdo on my existing overclocker in barotrauma from 2024\. Fundamentally it felt incomplete as it relied on the in-built autoreactor to stabilise the fission rate during overclocking. 
 
@@ -24,9 +24,9 @@ Normally the reactor is limited to a single **power output**. There is a way aro
 The original overclocker uses a switch into a signal check outputting 100 to the reactor’s turbine output with the **autoreactor enabled**, allowing for **overvoltage** equal to the **maximum power output** of a given reactor once the fission rate stabilised.   
 Which normally is unusable as such insane overvoltage would instantaneously fry every junction across the submarine. Which brings us to the second exploit.. the.. \***docking hatch**\* 
 
-It’s unique in the fact that it is an indestructible power distributor which is *immune* to electrical damage since it’s essentially a door. But like every component in the game, it has a limited wire output of 5\. You totally could wire the reactor straight to the docking hatch but now you’d only have 4 outputs while overvolting.. *n-nothing?* My design incorporates a short on the engine, bridging the reactor to the docking hatch, which *saves* us one *output slot*. 
+It’s unique in the fact that it is an indestructible power distributor which is **immune** to electrical damage since it’s essentially a door. But like every component in the game, it has a limited wire output of 5\. You totally could wire the reactor straight to the docking hatch but now you’d only have 4 outputs while overvolting.. *n-nothing?* My design incorporates a short on the engine, bridging the reactor to the docking hatch, which *saves* us one *output slot*. 
 
-The remainder of the design incorporates *three relays* rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a “**short**” here creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors etc. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering.  
+The remainder of the design incorporates *three relays* rated for 1000W each, for two they’re “powered in” to **step down power** for the rest of the sub. The third we abuse the “power out” slot and create a “*short*” here creating more connections between the docking hatch and additional machines of interest, such as ballast pumps or deconstructors etc. for overvolting, plus the navigation terminal. You wouldn’t want to be overclocking the engine while blindfolded without steering.  
 (step down relays become unstable under overvoltage causing power drops 33\~55% of their rated outputs)
 
 If you had the luxury of battery power you could shut off the relays completely, freeing up more power to overvolt other components while depleting battery power for everything else. Although at the time of writing **overvoltage benefits** have been **capped to 200%** so there is little to be gained by doing this unless your submarine has an awful reactor. 
@@ -98,7 +98,7 @@ Features the following jumps:
 2 → 7 , 4 → 7 , 8 → 5 , 9 → 3
 ```
 
-### Putting logic into practice
+### Putting logic into memory
 
 So how is this even set up? Where do you even begin?  
 Let’s think about functionality starting with underclocking, let's look at the formulas.
