@@ -130,8 +130,9 @@ Conditional State B → {50,4} → {75,8,9} →
 
 Conditional State C  → {100,null} → {75,8,9} →
 ```
-(Since **bucket 6** is unused, another constant 2001W is placed here. The jumps are shifted accordingly)
-After we add in the jumps “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:
+(Since **bucket 6** is unused, another constant 2001W is placed here. The jumps are shifted accordingly to 6)
+
+Now after we place in the jumps “**2** → 6 , **4** → 6 , **8** → 5 , **9** → 3”:
 ```
 Default state → {30,6} → {2001,75,5,3} →
 
@@ -139,7 +140,7 @@ Conditional State B → {50,6} → {2001,75,5,3} →
 
 Conditional State C  → {100} → {2001,75,5,3} →
 ```
-With values and jumps added, all 9 buckets lined up will look like this:  
+All 9 buckets lined up will look like this:  
 ```
 {30,6,50,6,100,2001,75,5,3}
 ```
